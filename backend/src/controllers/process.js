@@ -7,7 +7,7 @@ async function processPdf(req, res) {
     const inputFile = req.file.path;
     const outputFile = 'output.pdf'; // Replace with your output file path
     try {
-        await runOcrCommand(inputFile, outputFile).then(() => {
+        runOcrCommand(inputFile, outputFile).then(() => {
             const pdfFilePath = 'output.pdf'; // Replace with your PDF file path
 
             // Read the PDF file
