@@ -43,7 +43,7 @@ async function processPdf(req, res) {
                         console.log("text--------->", highlightedContent)
                      return res.json({message : `Search term found:${highlightedContent}`});
                 } else {
-                   return res.send('Search term not found.');
+                   return res.json({message : `Search term found`});
                 }
             });
         });
