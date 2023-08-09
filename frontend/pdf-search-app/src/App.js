@@ -59,26 +59,31 @@ const App = () => {
 
   return (
     <div className="app-container">
-    <h1>PDF Search and Response</h1>
-    <form className="search-form" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="pdfFile">Select PDF File:</label>
-        <input type="file" id="pdfFile" accept=".pdf" onChange={handleFileChange} />
+      <h1>PDF Search and Response</h1>
+      <form className="search-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="pdfFile">Select PDF File:</label>
+          <input type="file" id="pdfFile" accept=".pdf" onChange={handleFileChange} />
+        </div>
+        <div className="form-group">
+          <label htmlFor="searchTerm">Search Term:</label>
+          <input type="text" id="searchTerm" value={searchTerm} onChange={handleSearchTermChange} />
+        </div>
+        <button className="submit-button" type="submit" disabled={isLoading}>
+          {isLoading ? 'Loading...' : 'Submit'}
+        </button>
+      </form>
+      <div className="response-container">
+        <h2>Response:</h2>
+        <p className="response-text">{responseString}</p>
+        <button className="save-button" >
+          Save Response
+        </button>
       </div>
-      <div className="form-group">
-        <label htmlFor="searchTerm">Search Term:</label>
-        <input type="text" id="searchTerm" value={searchTerm} onChange={handleSearchTermChange} />
-      </div>
-      <button className="submit-button" type="submit" disabled={isLoading}>
-        {isLoading ? 'Loading...' : 'Submit'}
-      </button>
-    </form>
-    <div className="response-container">
-      <h2>Response:</h2>
-      <p className="response-text">{responseString}</p>
-    </div>
     </div>
   );
 };
+
+
 
 export default App;
