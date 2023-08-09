@@ -47,6 +47,4 @@ async function processPdf(req, res) {
       }
 }
 
-module.exports = {
-  processPdf
-};
+module.exports = {processPdf};
