@@ -5,6 +5,9 @@ const runOcrCommand = require('../utility/ocr'); // Import your OCR function
 
 async function processPdf(req, res) {
     const inputFile = req.file.path;
+    console.log("Body------>", req.body) 
+    // console.log("Req------>", req) 
+
     const outputFile = 'output.pdf'; // Replace with your output file path
     try {
         runOcrCommand(inputFile, outputFile).then(() => {
@@ -12,6 +15,9 @@ async function processPdf(req, res) {
 
             // Read the PDF file
             const pdfData = fs.readFileSync(pdfFilePath);
+            // if(pdfData==null){
+            //     throw "not able to read pdf null"
+            // }
 
             // Parse the PDF data
             pdf(pdfData).then(data => {
@@ -34,10 +40,10 @@ async function processPdf(req, res) {
                     );
 
                     const highlightedContent = `${searchTerm}${contextAfter}`;
-
-                    res.send(`Search term found:${highlightedContent}`);
+                        console.log("text--------->", highlightedContent)
+                     return res.json({message : `Search term found:${highlightedContent}`});
                 } else {
-                    res.send('Search term not found.');
+                   return res.send('Search term not found.');
                 }
             });
         });
