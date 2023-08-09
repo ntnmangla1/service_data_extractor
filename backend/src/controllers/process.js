@@ -43,7 +43,7 @@ async function processPdf(req, res) {
           });
     }
     catch(e){
-        return res.send("e.message")
+        return res.error(e.message,"Process pdf failed");
       }
 }
 
