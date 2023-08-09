@@ -56,6 +56,30 @@ const App = () => {
       console.error('An error occurred:', error);
     }
   };
+  const handleSave = async () => {
+    try {
+      if (!responseString) {
+        alert('No response to save.');
+        return;
+      }
+
+      const saveResponse = await fetch('http://localhost:3000/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ response: responseString }),
+      });
+
+      if (saveResponse.ok) {
+        alert('Response saved successfully.');
+      } else {
+        alert('Failed to save response.');
+      }
+    } catch (error) {
+      console.error('An error occurred while saving response:', error);
+    }
+  };
 
   return (
     <div className="app-container">
@@ -76,7 +100,7 @@ const App = () => {
       <div className="response-container">
         <h2>Response:</h2>
         <p className="response-text">{responseString}</p>
-        <button className="save-button" >
+        <button className="save-button" onClick={handleSave} >
           Save Response
         </button>
       </div>
