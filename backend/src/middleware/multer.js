@@ -3,8 +3,6 @@ const path=require('path')
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log("req",req);
-        console.log("reqfile",file);
         cb(null, '/Users/utkarsh.nigam/Desktop/NodeJS Practice/POC-data-Extractor/service_data_extractor/backend/src/uploads');
         console.log("hello");
     },
