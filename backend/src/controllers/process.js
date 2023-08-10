@@ -42,18 +42,17 @@ async function processPdf(req, res) {
                         );
 
                         const newLineindex=contextAfter.indexOf('\n')
-                        const temp= "Message: "
 
                         // let highlightedContent= `${temp}${term}${contextAfter}`
                         // responseArray.push(highlightedContent)
 
                         if(newLineindex!==-1){
                             const finalAfter=contextAfter.slice(0,newLineindex)
-                            let highlightedContent = `${temp}${term}${finalAfter}`;
+                            let highlightedContent = `${term}${finalAfter}`;
                             responseArray.push(highlightedContent)
                         }
                         else{
-                            let highlightedContent = `${temp}${term}${contextAfter}`;
+                            let highlightedContent = `${term}${contextAfter}`;
                             responseArray.push(highlightedContent)
                         }
                         
@@ -68,7 +67,7 @@ async function processPdf(req, res) {
                     }
                 })
 
-                res.send(responseArray)
+                res.json(responseArray)
             });
         });
     }

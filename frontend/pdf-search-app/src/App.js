@@ -5,7 +5,8 @@ import './App.css'; // Import your CSS file for custom styles
 const App = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [responseString, setResponseString] = useState('');
+  // const [responseString, setResponseString] = useState('');
+  const [responseArray, setResponseArray] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Track loading state
 
   const handleFileChange = (event) => {
@@ -45,11 +46,14 @@ const App = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("data--------------->", data);
-        console.log("type---------->",typeof(data))
-        setResponseString(data);
-        console.log("strung data",setResponseString(data));
+        console.log("data---->",typeof(data))
+        // setResponseString(data);
+        setResponseArray(data);
+        // console.log("strung data",setResponseString(data));
       } else {
-        setResponseString("data not found");
+        setResponseArray([]); // Clear the array on error
+        console.error('API request failed.');
+        // setResponseString("data not found");
         console.error('API request failed.');
       }
     } catch (error) {
@@ -59,11 +63,18 @@ const App = () => {
   };
   const handleSave = async () => {
     try {
-      if (!responseString) {
+      let temp = false;
+      responseArray.forEach((element, index)=>{
+       if(element!=="Not found"){
+        temp = true;
+       }
+      })
+      if(!temp){
         alert('No response to save.');
         return;
       }
-      if(responseString === "Search term not found"){
+
+      if (responseArray.length === 0) {
         alert('No response to save.');
         return;
       }
@@ -73,7 +84,7 @@ const App = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ response: responseString }),
+        body: JSON.stringify({ response: responseArray }),
       });
 
       if (saveResponse.ok) {
@@ -104,7 +115,26 @@ const App = () => {
       </form>
       <div className="response-container">
         <h2>Response:</h2>
-        <p className="response-text">{responseString}</p>
+        {responseArray.length > 0 ? (
+          <table className="response-table">
+            <thead>
+              <tr>
+                <th>Index</th>
+                <th>Response Item</th>
+              </tr>
+            </thead>
+            <tbody>
+              {responseArray.map((item, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="response-text">No response data.</p>
+        )}
         <button className="save-button" onClick={handleSave} >
           Save Response
         </button>

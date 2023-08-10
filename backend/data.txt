@@ -55,3 +55,36 @@ response=Search term found:Total Proposed Contractual Obligation: $ 151.09
 Date: 8/10/2023, 11:55:15 AM 
 response=Search term found:Total Proposed Contractual Obligation: $ 151.09
 
+Date: 8/10/2023, 2:16:13 PM 
+response=Message: Total Proposed Contractual Obligation: $ 151.097 ,Message: Down Payment (non-refundable) $ 10,000 ,Message: Site Check $ 
+
+Date: 8/10/2023, 2:18:20 PM 
+response=Message: Total Proposed Contractual Obligation: $ 151.097 ,Message: Down Payment (non-refundable) $ 10,000 ,Message: Site Check $ 
+
+Date: 8/10/2023, 2:18:48 PM 
+response=Not found
+
+Date: 8/10/2023, 2:22:58 PM 
+response=Not found
+
+Date: 8/10/2023, 2:23:35 PM 
+response=Not found
+
+Date: 8/10/2023, 2:44:55 PM 
+response=Not found
+
+Date: 8/10/2023, 2:45:39 PM 
+response=Not found
+
+Date: 8/10/2023, 2:46:48 PM 
+response=Not found
+
+Date: 8/10/2023, 2:47:53 PM 
+response=Not found
+
+Date: 8/10/2023, 2:51:32 PM 
+response=Not found
+
+Date: 8/10/2023, 3:01:21 PM 
+response=there are sufficient minimum contacts with the state 
+
