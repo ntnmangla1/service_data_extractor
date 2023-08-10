@@ -26,25 +26,49 @@ async function processPdf(req, res) {
                 // Now you can search for specific data in the extracted text
                 const searchTerm = req.body.searchTerm; // Replace with the data you want to find
 
-                if (extractedText.includes(searchTerm)) {
-                    const startIndex = extractedText.indexOf(searchTerm);
-                    const endIndex = startIndex + searchTerm.length;
+                const searchArray = searchTerm.split(',').map(value=>value.trim())
+                console.log(searchTerm)
 
-                    const contextBefore = extractedText.substring(
-                        Math.max(startIndex - 100, 0),
-                        startIndex
-                    );
-                    const contextAfter = extractedText.substring(
-                        endIndex,
-                        Math.min(endIndex + 10, extractedText.length)
-                    );
+                const responseArray = [];
 
-                    const highlightedContent = `${searchTerm}${contextAfter}`;
-                        console.log("text--------->", highlightedContent)
-                     return res.json({message : `Search term found:${highlightedContent}`});
-                } else {
-                   return res.json({message : `Search term found`});
-                }
+                searchArray.forEach(term=>{
+                    if (extractedText.includes(term)) {
+                        const startIndex = extractedText.indexOf(term);
+                        const endIndex = startIndex + term.length;
+    
+                        const contextAfter = extractedText.substring(
+                            endIndex,
+                            Math.min(endIndex + 200, extractedText.length)
+                        );
+
+                        const newLineindex=contextAfter.indexOf('\n')
+                        const temp= "Message: "
+
+                        // let highlightedContent= `${temp}${term}${contextAfter}`
+                        // responseArray.push(highlightedContent)
+
+                        if(newLineindex!==-1){
+                            const finalAfter=contextAfter.slice(0,newLineindex)
+                            let highlightedContent = `${temp}${term}${finalAfter}`;
+                            responseArray.push(highlightedContent)
+                        }
+                        else{
+                            let highlightedContent = `${temp}${term}${contextAfter}`;
+                            responseArray.push(highlightedContent)
+                        }
+                        
+
+                        
+    
+                        
+                        // res.json({message : `Search term found:${highlightedContent}`});
+                    } else {
+                    //    return res.json({message : `Search term not found`});
+                        responseArray.push('Not found')
+                    }
+                })
+
+                res.send(responseArray)
             });
         });
     }

@@ -45,8 +45,9 @@ const App = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("data--------------->", data);
+        console.log("type---------->",typeof(data))
         setResponseString(data);
-        console.log("strung data",setResponseString(data.message));
+        console.log("strung data",setResponseString(data));
       } else {
         setResponseString("data not found");
         console.error('API request failed.');
@@ -59,6 +60,10 @@ const App = () => {
   const handleSave = async () => {
     try {
       if (!responseString) {
+        alert('No response to save.');
+        return;
+      }
+      if(responseString === "Search term not found"){
         alert('No response to save.');
         return;
       }

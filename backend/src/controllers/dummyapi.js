@@ -3,6 +3,7 @@ const fs = require('fs')
 async function dummyApi(req, res) {
     try {
         let data = req.body
+        console.log(data);
         let requiredData = Object.keys(data)
             .map((key, value) => { return [key, data[key]].join('='); })
             .join('\n');
