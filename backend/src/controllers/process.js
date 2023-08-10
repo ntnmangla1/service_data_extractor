@@ -5,6 +5,9 @@ const runOcrCommand = require('../utility/ocr'); // Import your OCR function
 
 async function processPdf(req, res) {
     const inputFile = req.file.path;
+    console.log("Body------>", req.body) 
+    // console.log("Req------>", req) 
+
     const outputFile = 'output.pdf'; // Replace with your output file path
     try {
         runOcrCommand(inputFile, outputFile).then(() => {
@@ -12,6 +15,9 @@ async function processPdf(req, res) {
 
             // Read the PDF file
             const pdfData = fs.readFileSync(pdfFilePath);
+            // if(pdfData==null){
+            //     throw "not able to read pdf null"
+            // }
 
             // Parse the PDF data
             pdf(pdfData).then(data => {
@@ -20,25 +26,48 @@ async function processPdf(req, res) {
                 // Now you can search for specific data in the extracted text
                 const searchTerm = req.body.searchTerm; // Replace with the data you want to find
 
-                if (extractedText.includes(searchTerm)) {
-                    const startIndex = extractedText.indexOf(searchTerm);
-                    const endIndex = startIndex + searchTerm.length;
+                const searchArray = searchTerm.split(',').map(value=>value.trim())
+                console.log(searchTerm)
 
-                    const contextBefore = extractedText.substring(
-                        Math.max(startIndex - 100, 0),
-                        startIndex
-                    );
-                    const contextAfter = extractedText.substring(
-                        endIndex,
-                        Math.min(endIndex + 10, extractedText.length)
-                    );
+                const responseArray = [];
 
-                    const highlightedContent = `${searchTerm}${contextAfter}`;
+                searchArray.forEach(term=>{
+                    if (extractedText.includes(term)) {
+                        const startIndex = extractedText.indexOf(term);
+                        const endIndex = startIndex + term.length;
+    
+                        const contextAfter = extractedText.substring(
+                            endIndex,
+                            Math.min(endIndex + 200, extractedText.length)
+                        );
 
-                    res.send(`Search term found:${highlightedContent}`);
-                } else {
-                    res.send('Search term not found.');
-                }
+                        const newLineindex=contextAfter.indexOf('\n')
+
+                        // let highlightedContent= `${temp}${term}${contextAfter}`
+                        // responseArray.push(highlightedContent)
+
+                        if(newLineindex!==-1){
+                            const finalAfter=contextAfter.slice(0,newLineindex)
+                            let highlightedContent = `${term}${finalAfter}`;
+                            responseArray.push(highlightedContent)
+                        }
+                        else{
+                            let highlightedContent = `${term}${contextAfter}`;
+                            responseArray.push(highlightedContent)
+                        }
+                        
+
+                        
+    
+                        
+                        // res.json({message : `Search term found:${highlightedContent}`});
+                    } else {
+                    //    return res.json({message : `Search term not found`});
+                        responseArray.push('Not found')
+                    }
+                })
+
+                res.json(responseArray)
             });
         });
     }
