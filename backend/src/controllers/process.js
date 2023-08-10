@@ -5,8 +5,6 @@ const runOcrCommand = require('../utility/ocr'); // Import your OCR function
 
 async function processPdf(req, res) {
     const inputFile = req.file.path;
-    console.log("Body------>", req.body) 
-    // console.log("Req------>", req) 
 
     const outputFile = 'output.pdf'; // Replace with your output file path
     try {
@@ -27,8 +25,6 @@ async function processPdf(req, res) {
                 const searchTerm = req.body.searchTerm; // Replace with the data you want to find
 
                 const searchArray = searchTerm.split(',').map(value=>value.trim())
-                console.log(searchTerm)
-
                 const responseArray = [];
 
                 searchArray.forEach(term=>{

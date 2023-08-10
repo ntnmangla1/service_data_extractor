@@ -3,7 +3,6 @@ const path=require('path')
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log("hello");
         cb(null, path.join("/Users/mahavir.goyal/Desktop/project_Pdf/service_data_extractor/backend/src/uploads"));
     },
     filename: (req, file, cb) => {
