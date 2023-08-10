@@ -24,6 +24,10 @@ const App = () => {
       alert('Please select a PDF file.');
       return;
     }
+    if (searchTerm === "" || searchTerm === "/n") {
+      alert('Please add search term');
+      return;
+    }
 
     try {
 
