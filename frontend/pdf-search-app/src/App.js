@@ -5,6 +5,7 @@ import './App.css'; // Import your CSS file for custom styles
 const App = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedOption, setSelectedOption] = useState('first');
   // const [responseString, setResponseString] = useState('');
   const [responseArray, setResponseArray] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Track loading state
@@ -14,7 +15,10 @@ const App = () => {
   };
 
   const handleSearchTermChange = (event) => {
-    setSearchTerm(event.target.value);
+      setSearchTerm(event.target.value);
+  };
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -24,36 +28,38 @@ const App = () => {
       alert('Please select a PDF file.');
       return;
     }
-    if (searchTerm === "" || searchTerm === "/n") {
+    if(searchTerm==="" || searchTerm==="/n"){
       alert('Please add search term');
       return;
     }
 
     try {
-
       const formData = new FormData();
       formData.append('pdfFile', pdfFile, pdfFile.name); // Append the actual file
       formData.append('searchTerm', searchTerm);
-
+      formData.append('findingParameter', selectedOption);
+      
       setIsLoading(true); // Set loading state
 
       const response = await fetch('http://localhost:3000/process', {
         method: 'POST',
         body: formData,
       });
-      // console.log('response--------->', JSON.stringify(response))
+      if(response==null){
+        alert('network problem');
+      return;
+      }
       setIsLoading(false); // Reset loading state
-
-      if (response.ok) {
+     if (response.ok) {
         const data = await response.json();
         // setResponseString(data);
         setResponseArray(data);
         // console.log("strung data",setResponseString(data));
       } else {
-        setResponseArray([]); // Clear the array on error
-        console.error('API request failed.');
-        // setResponseString("data not found");
-        console.error('API request failed.');
+
+        alert('API request failed. Please check your network connection.');
+        setIsLoading(false);
+        return;
       }
     } catch (error) {
       setIsLoading(false); // Reset loading state
@@ -63,12 +69,12 @@ const App = () => {
   const handleSave = async () => {
     try {
       let temp = false;
-      responseArray.forEach((element, index) => {
-        if (element !== "Not found") {
-          temp = true;
-        }
+      responseArray.forEach((element, index)=>{
+       if(element!=="Not found"){
+        temp = true;
+       }
       })
-      if (!temp) {
+      if(!temp){
         alert('No response to save.');
         return;
       }
@@ -108,6 +114,29 @@ const App = () => {
           <label htmlFor="searchTerm">Search Term:</label>
           <input type="text" id="searchTerm" value={searchTerm} onChange={handleSearchTermChange} />
         </div>
+        <div className="form-group">
+          <label>Select Option:</label>
+          <div className="radio-group">
+            <label>
+              <input
+                type="radio"
+                value="first"
+                checked={selectedOption === "first"}
+                onChange={handleOptionChange}
+              />
+              First
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="all"
+                checked={selectedOption === "all"}
+                onChange={handleOptionChange}
+              />
+              All
+            </label>
+          </div>
+          </div>
         <button className="submit-button" type="submit" disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Submit'}
         </button>
@@ -134,14 +163,12 @@ const App = () => {
         ) : (
           <p className="response-text">No response data.</p>
         )}
-        <button className="save-button" onClick={handleSave} >
+        <button className="save-button" onClick={handleSave}>
           Save Response
         </button>
       </div>
     </div>
   );
 };
-
-
 
 export default App;
