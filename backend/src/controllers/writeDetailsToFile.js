@@ -6,7 +6,7 @@ async function saveDetails(req, res) {
         let requiredData = Object.keys(data)
             .map((key, value) => { return [key, data[key]].join('='); })
             .join('\n');
-        fs.writeFile('data.txt', `Date: ${new Date().toLocaleString()} \n${requiredData}\n\n`, { flag: 'a+' }, err => {
+        fs.writeFileSync('data.txt', `Date: ${new Date().toLocaleString()} \n${requiredData}\n\n`, { flag: 'a+' }, err => {
 
             if (err) {
                return res.send("err", err)

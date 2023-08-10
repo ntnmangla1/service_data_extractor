@@ -5,7 +5,6 @@ const runOcrCommand = require('../utility/ocr'); // Import your OCR function
 
 async function processPdf(req, res) {
     const inputFile = req.file.path;
-
     const outputFile = 'output.pdf'; // Replace with your output file path
     try {
         runOcrCommand(inputFile, outputFile).then(() => {
@@ -13,57 +12,115 @@ async function processPdf(req, res) {
 
             // Read the PDF file
             const pdfData = fs.readFileSync(pdfFilePath);
-            // if(pdfData==null){
-            //     throw "not able to read pdf null"
-            // }
-
-            // Parse the PDF data
             pdf(pdfData).then(data => {
                 const extractedText = data.text;
 
                 // Now you can search for specific data in the extracted text
                 const searchTerm = req.body.searchTerm; // Replace with the data you want to find
 
-                const searchArray = searchTerm.split(',').map(value=>value.trim())
+                const searchArray = searchTerm.split(',').map(value => value.trim())
+
                 const responseArray = [];
 
-                searchArray.forEach(term=>{
-                    if (extractedText.includes(term)) {
-                        const startIndex = extractedText.indexOf(term);
-                        const endIndex = startIndex + term.length;
-    
-                        const contextAfter = extractedText.substring(
-                            endIndex,
-                            Math.min(endIndex + 200, extractedText.length)
-                        );
+                let findingParameter = req.body.findingParameter
+                if (findingParameter == 'all') {
+                    searchArray.forEach(term => {
+                        const indices = [...extractedText.matchAll(new RegExp(term, 'gi'))].map(a => a.index);
 
-                        const newLineindex=contextAfter.indexOf('\n')
-
-                        // let highlightedContent= `${temp}${term}${contextAfter}`
-                        // responseArray.push(highlightedContent)
-
-                        if(newLineindex!==-1){
-                            const finalAfter=contextAfter.slice(0,newLineindex)
-                            let highlightedContent = `${term}${finalAfter}`;
-                            responseArray.push(highlightedContent)
+                        if (!indices) {
+                            responseArray.push('Not Found')
                         }
-                        else{
-                            let highlightedContent = `${term}${contextAfter}`;
-                            responseArray.push(highlightedContent)
+                        else {
+                            indices.forEach(index => {
+
+                                const startIndex = index;
+                                const endIndex = startIndex + term.length;
+
+                                const contextBefore = extractedText.substring(
+                                    Math.max(startIndex - 100, 0),
+                                    startIndex
+                                );
+
+                                const contextAfter = extractedText.substring(
+                                    endIndex,
+                                    Math.min(endIndex + 200, extractedText.length)
+                                );
+
+                                let backLineIndex = contextBefore.lastIndexOf('\n')
+                                backLineIndex += 2
+                                const newLineindex = contextAfter.indexOf('\n')
+
+                                if (newLineindex && backLineIndex) {
+                                    let finalAfter = contextAfter.slice(0, newLineindex)
+                                    let finalBefore = contextBefore.slice(backLineIndex, startIndex)
+                                    let highlightedContent = `${term}: ${finalBefore}${term}${finalAfter}`
+                                    responseArray.push(highlightedContent)
+                                } else if (backLineIndex) {
+                                    let finalBefore = contextBefore.slice(backLineIndex, startIndex)
+                                    let highlightedContent = `${term}: ${finalBefore}${term}${contextAfter}`
+                                    responseArray.push(highlightedContent)
+                                } else if (newLineindex) {
+                                    let finalAfter = contextAfter.slice(0, newLineindex)
+                                    let highlightedContent = `${term}: ${contextBefore}${term}${finalAfter}`
+                                    responseArray.push(highlightedContent)
+
+                                } else {
+                                    let highlightedContent = `${term}: ${contextBefore}${term}${contextAfter}`
+                                    responseArray.push(highlightedContent)
+
+                                }
+                            })
                         }
-                        
 
-                        
-    
-                        
-                        // res.json({message : `Search term found:${highlightedContent}`});
-                    } else {
-                    //    return res.json({message : `Search term not found`});
-                        responseArray.push('Not found')
-                    }
-                })
+                    })
+                } else if (findingParameter == 'first') {
 
-                res.json(responseArray)
+                    searchArray.forEach(term => {
+                        if (extractedText.includes(term)) {
+                            const startIndex = extractedText.indexOf(term);
+                            const endIndex = startIndex + term.length;
+
+                            const contextBefore = extractedText.substring(
+                                Math.max(startIndex - 100, 0),
+                                startIndex
+                            );
+                            const contextAfter = extractedText.substring(
+                                endIndex,
+                                Math.min(endIndex + 200, extractedText.length)
+                            );
+
+                            let backLineIndex = contextBefore.lastIndexOf('\n')
+                            backLineIndex += 2
+                            const newLineindex = contextAfter.indexOf('\n')
+
+                            if (newLineindex && backLineIndex) {
+                                let finalAfter = contextAfter.slice(0, newLineindex)
+                                let finalBefore = contextBefore.slice(backLineIndex, startIndex)
+                                let highlightedContent = `${term}: ${finalBefore}${term}${finalAfter}`
+                                responseArray.push(highlightedContent)
+                            } else if (backLineIndex) {
+                                let finalBefore = contextBefore.slice(backLineIndex, startIndex)
+                                let highlightedContent = `${term}: ${finalBefore}${term}${contextAfter}`
+                                responseArray.push(highlightedContent)
+                            } else if (newLineindex) {
+                                let finalAfter = contextAfter.slice(0, newLineindex)
+                                let highlightedContent = `${term}: ${contextBefore}${term}${finalAfter}`
+                                responseArray.push(highlightedContent)
+
+                            } else {
+                                let highlightedContent = `${term}: ${contextBefore}${term}${contextAfter}`
+                                responseArray.push(highlightedContent)
+
+                            }
+                        } else {
+                            responseArray.push('Not found')
+                        }
+                    })
+
+                }
+
+
+                res.send(responseArray)
             });
         });
     }
