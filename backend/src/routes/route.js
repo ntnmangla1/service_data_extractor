@@ -1,13 +1,13 @@
 const express = require('express')
 const upload = require('../middleware/multer')
 const processController = require('../controllers/process')
-const dummyApi = require('../controllers/dummyapi')
+const saveDetails = require('../controllers/dummyapi');
 const router = new express.Router();
 
 
 
 
 router.post('/process', upload.single('pdfFile'), processController.processPdf);
-router.post('/data',dummyApi);
+router.post('/data',saveDetails);
 
 module.exports = router

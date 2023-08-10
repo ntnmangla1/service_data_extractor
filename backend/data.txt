@@ -88,3 +88,9 @@ response=Not found
 Date: 8/10/2023, 3:01:21 PM 
 response=there are sufficient minimum contacts with the state 
 
+Date: 8/10/2023, 5:30:31 PM 
+response=
+
+Date: 8/10/2023, 5:31:01 PM 
+response=there are sufficient minimum contacts with the state 
+

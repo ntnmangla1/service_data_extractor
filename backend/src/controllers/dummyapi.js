@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-async function dummyApi(req, res) {
+async function saveDetails(req, res) {
     try {
         let data = req.body
         let requiredData = Object.keys(data)
@@ -11,7 +11,6 @@ async function dummyApi(req, res) {
             if (err) {
                return res.send("err", err)
             }
-            // console.log(new Date());
         })
         res.status(200).json({ statusMessage: "Success", message: "Data Saved Successfully!!!", data: data })
     } catch (err) {
@@ -19,4 +18,4 @@ async function dummyApi(req, res) {
     }
 }
 
-module.exports = dummyApi;
+module.exports = saveDetails;
