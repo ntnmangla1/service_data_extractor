@@ -6,14 +6,8 @@ async function runOcrCommand(inputFile, outputFile) {
 
     try {
         const { stdout, stderr } = await exec(ocrCommand);
-        console.log('Output:', stdout);
-        if (stderr) {
-            console.error('Error:', stderr);
-        } else {
-            console.log('OCR completed successfully.');
-        }
     } catch (error) {
-        console.error('Error:', error.message);
+      return error.message;
     }
 }
 
