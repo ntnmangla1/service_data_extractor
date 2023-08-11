@@ -26,8 +26,7 @@ async function processPdf(req, res) {
                 if (findingParameter == 'all') {
                     searchArray.forEach(term => {
                         const indices = [...extractedText.matchAll(new RegExp(term, 'gi'))].map(a => a.index);
-
-                        if (!indices) {
+                        if (indices.length===0) {
                             responseArray.push('Not Found')
                         }
                         else {
@@ -71,7 +70,6 @@ async function processPdf(req, res) {
                                 }
                             })
                         }
-
                     })
                 } else if (findingParameter == 'first') {
 
