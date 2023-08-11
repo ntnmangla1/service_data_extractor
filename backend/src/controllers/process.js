@@ -5,24 +5,18 @@ const runOcrCommand = require('../utility/ocr'); // Import your OCR function
 
 async function processPdf(req, res) {
     const inputFile = req.file.path;
-    const outputFile = 'output.pdf'; // Replace with your output file path
+    const outputFile = 'output.pdf';
+    const {searchTerm, findingParameter}= req.body; // Replace with your output file path
     try {
         runOcrCommand(inputFile, outputFile).then(() => {
             const pdfFilePath = 'output.pdf'; // Replace with your PDF file path
-
             // Read the PDF file
             const pdfData = fs.readFileSync(pdfFilePath);
             pdf(pdfData).then(data => {
                 const extractedText = data.text;
-
                 // Now you can search for specific data in the extracted text
-                const searchTerm = req.body.searchTerm; // Replace with the data you want to find
-
                 const searchArray = searchTerm.split(',').map(value => value.trim())
-
                 const responseArray = [];
-
-                let findingParameter = req.body.findingParameter
                 if (findingParameter == 'all') {
                     searchArray.forEach(term => {
                         const indices = [...extractedText.matchAll(new RegExp(term, 'gi'))].map(a => a.index);

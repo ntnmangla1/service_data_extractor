@@ -9,7 +9,7 @@ async function saveDetails(req, res) {
         fs.writeFileSync('data.txt', `Date: ${new Date().toLocaleString()} \n${requiredData}\n\n`, { flag: 'a+' }, err => {
 
             if (err) {
-               return res.send("err", err)
+               return res.send("res data not saved", err)
             }
         })
         res.status(200).json({ statusMessage: "Success", message: "Data Saved Successfully!!!", data: data })
