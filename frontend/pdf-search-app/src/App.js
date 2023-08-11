@@ -107,15 +107,15 @@ const App = () => {
       <h1>PDF Search and Response</h1>
       <form className="search-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="pdfFile">Select PDF File:</label>
+          <label htmlFor="pdfFile">Select PDF File</label>
           <input type="file" id="pdfFile" accept=".pdf" onChange={handleFileChange} />
         </div>
         <div className="form-group">
-          <label htmlFor="searchTerm">Search Term:</label>
+          <label htmlFor="searchTerm">Search Term</label>
           <input type="text" id="searchTerm" value={searchTerm} onChange={handleSearchTermChange} />
         </div>
         <div className="form-group">
-          <label>Select Option:</label>
+          <label>Select Option</label>
           <div className="radio-group">
             <label>
               <input
@@ -124,7 +124,7 @@ const App = () => {
                 checked={selectedOption === "first"}
                 onChange={handleOptionChange}
               />
-              First
+              First Occurence
             </label>
             <label>
               <input
@@ -133,7 +133,7 @@ const App = () => {
                 checked={selectedOption === "all"}
                 onChange={handleOptionChange}
               />
-              All
+              All Occurences
             </label>
           </div>
           </div>
@@ -142,7 +142,7 @@ const App = () => {
         </button>
       </form>
       <div className="response-container">
-        <h2>Response:</h2>
+        <h2>Response</h2>
         {responseArray.length > 0 ? (
           <table className="response-table">
             <thead>
@@ -161,7 +161,7 @@ const App = () => {
             </tbody>
           </table>
         ) : (
-          <p className="response-text">No response data.</p>
+          <p className="response-text"></p>
         )}
         <button className="save-button" onClick={handleSave}>
           Save Response
