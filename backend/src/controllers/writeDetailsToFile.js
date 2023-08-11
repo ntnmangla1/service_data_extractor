@@ -14,7 +14,7 @@ async function saveDetails(req, res) {
         })
         res.status(200).json({ statusMessage: "Success", message: "Data Saved Successfully!!!", data: data })
     } catch (err) {
-        res.status(500).json({ statusMessage: "Error", message: err.message })
+        res.status(500).json({ statusMessage: "data get not saved due to input changes", message: err.message })
     }
 }
 
